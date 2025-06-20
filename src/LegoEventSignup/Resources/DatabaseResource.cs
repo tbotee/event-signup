@@ -10,9 +10,13 @@ namespace LegoEventSignup.Resources
     {
         public DatabaseInstance DatabaseInstance { get; }
 
+        public DatabaseSecret DatabaseSecret { get; }
+
+        public const string DB_NAME = "legoeventdb";
+
         public DatabaseResources(Construct scope, Vpc vpc)
         {
-            var credentialsSecret = new DatabaseSecret(scope, "LegoEventSignupPostgresSecret", new DatabaseSecretProps
+            DatabaseSecret = new DatabaseSecret(scope, "LegoEventSignupPostgresSecret", new DatabaseSecretProps
             {
                 Username = "postgres"
             });
@@ -23,7 +27,7 @@ namespace LegoEventSignup.Resources
                 InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.MICRO),
                 Vpc = vpc,
                 VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PRIVATE_WITH_EGRESS },
-                Credentials = Credentials.FromSecret(credentialsSecret),
+                Credentials = Credentials.FromSecret(DatabaseSecret),
                 MultiAz = false,
                 AllocatedStorage = 20,
                 MaxAllocatedStorage = 100,
@@ -31,7 +35,7 @@ namespace LegoEventSignup.Resources
                 DeletionProtection = false,
                 RemovalPolicy = RemovalPolicy.DESTROY,
                 PubliclyAccessible = false,
-                DatabaseName = "legoeventdb"
+                DatabaseName = DB_NAME
             });
         }
     }
