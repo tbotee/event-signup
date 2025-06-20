@@ -18,7 +18,16 @@ namespace LegoEventSignup
                     Region = System.Environment.GetEnvironmentVariable("CDK_DEFAULT_REGION"),
                 }
             });
-            app.Synth();
+            
+            try
+            {
+                app.Synth();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error synthesizing CDK app: {ex.Message}");
+                System.Environment.Exit(1);
+            }
         }
     }
 }

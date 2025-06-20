@@ -1,5 +1,6 @@
 using Amazon.CDK;
 using Constructs;
+using LegoEventSignup.Resources;
 
 namespace LegoEventSignup
 {
@@ -7,7 +8,37 @@ namespace LegoEventSignup
     {
         internal LegoEventSignupStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
-            // The code that defines your stack goes here
+            var vpcResources = new VpcResources(this);
+            var vpc = vpcResources.Vpc;
+
+            var cognitoResources = new CognitoResources(this);
+            var userPool = cognitoResources.UserPool;
+            var userPoolClient = cognitoResources.UserPoolClient;
+
+            var dbResources = new DatabaseResources(this, vpc);
+            var db = dbResources.DatabaseInstance;
+
+            
+
+            new CfnOutput(this, "UserPoolId", new CfnOutputProps 
+            { 
+                Value = userPool.UserPoolId,
+                Description = "LegoUserPool Cognito User Pool ID"
+            });
+
+            new CfnOutput(this, "UserPoolClientId", new CfnOutputProps
+            {
+                Value = userPoolClient.UserPoolClientId,
+                Description = "LegoUserPoolClient Cognito User Pool Client ID"
+            });
+
+            new CfnOutput(this, "DatabaseEndpoint", new CfnOutputProps
+            {
+                Value = db.DbInstanceEndpointAddress,
+                Description = "LegoEventSignupPostgresDatabase RDS Database Endpoint"
+            });
+
+            new CfnOutput(this, "VpcId", new CfnOutputProps { Value = vpc.VpcId });
         }
     }
 }
