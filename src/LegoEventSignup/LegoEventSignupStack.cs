@@ -1,6 +1,9 @@
 using Amazon.CDK;
 using Constructs;
 using LegoEventSignup.Resources;
+using Amazon.CDK.AWS.Lambda;
+using Amazon.CDK.AWS.EC2;
+using System.Collections.Generic;
 
 namespace LegoEventSignup
 {
@@ -17,8 +20,28 @@ namespace LegoEventSignup
 
             var dbResources = new DatabaseResources(this, vpc);
             var db = dbResources.DatabaseInstance;
+            var dbSecret = dbResources.DatabaseSecret;
 
-            
+            var graphqlLambda = new Function(this, "EventSignupGraphQLLambda", new FunctionProps
+            {
+                Runtime = Runtime.DOTNET_8,
+                Handler = "EventSignup.Lambda::EventSignup.Lambda.Function::FunctionHandler",
+                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset("lambda"),
+                Vpc = vpc,
+                VpcSubnets = new SubnetSelection
+                {
+                    SubnetType = SubnetType.PRIVATE_WITH_EGRESS
+                },
+                Environment = new Dictionary<string, string>
+                {
+                    ["DB_SECRET_ARN"] = dbSecret.SecretArn,
+                    ["DB_ENDPOINT"] = db.InstanceEndpoint.Hostname,
+                    ["DB_NAME"] = DatabaseResources.DB_NAME,
+                    ["USER_POOL_ID"] = userPool.UserPoolId
+                }
+            });
+
+            dbSecret.GrantRead(graphqlLambda);
 
             new CfnOutput(this, "UserPoolId", new CfnOutputProps 
             { 
