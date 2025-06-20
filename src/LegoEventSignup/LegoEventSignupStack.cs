@@ -1,9 +1,6 @@
 using Amazon.CDK;
 using Constructs;
 using LegoEventSignup.Resources;
-using Amazon.CDK.AWS.Lambda;
-using Amazon.CDK.AWS.EC2;
-using System.Collections.Generic;
 
 namespace LegoEventSignup
 {
@@ -22,26 +19,25 @@ namespace LegoEventSignup
             var db = dbResources.DatabaseInstance;
             var dbSecret = dbResources.DatabaseSecret;
 
-            var graphqlLambda = new Function(this, "EventSignupGraphQLLambda", new FunctionProps
-            {
-                Runtime = Runtime.DOTNET_8,
-                Handler = "EventSignup.Lambda::EventSignup.Lambda.Function::FunctionHandler",
-                Code = Amazon.CDK.AWS.Lambda.Code.FromAsset("lambda"),
-                Vpc = vpc,
-                VpcSubnets = new SubnetSelection
-                {
-                    SubnetType = SubnetType.PRIVATE_WITH_EGRESS
-                },
-                Environment = new Dictionary<string, string>
-                {
-                    ["DB_SECRET_ARN"] = dbSecret.SecretArn,
-                    ["DB_ENDPOINT"] = db.InstanceEndpoint.Hostname,
-                    ["DB_NAME"] = DatabaseResources.DB_NAME,
-                    ["USER_POOL_ID"] = userPool.UserPoolId
-                }
-            });
+            var lambdaResources = new LambdaResources(
+                this, 
+                vpc, 
+                dbSecret.SecretArn, 
+                db.InstanceEndpoint.Hostname, 
+                DatabaseResources.DB_NAME, 
+                userPool.UserPoolId
+            );
+            var graphqlLambda = lambdaResources.GraphQLLambda;
 
             dbSecret.GrantRead(graphqlLambda);
+
+            var graphqlApiResources = new GraphQLApiResources(this, graphqlLambda, userPool);
+
+            new CfnOutput(this, "GraphQLAPIURL", new CfnOutputProps
+            {
+                Value = graphqlApiResources.Api.GraphqlUrl,
+                Description = "GraphQL API URL"
+            });
 
             new CfnOutput(this, "UserPoolId", new CfnOutputProps 
             { 

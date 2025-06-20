@@ -1,0 +1,10 @@
+type Query {
+  listEvents: [Event!]!
+  getEventById(id: String!): Event
+}
+
+type Event {
+  id: String!
+  name: String!
+  date: String!
+}
