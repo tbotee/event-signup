@@ -1,56 +1,14 @@
-using Amazon.Lambda.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Amazon.Lambda.AspNetCoreServer;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Logging;
 
-[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
-
-namespace EventSignup.Lambda 
+namespace EventSignup 
 {
-    public class Function : Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
+    public class Function : APIGatewayHttpApiV2ProxyFunction
     {
         protected override void Init(IWebHostBuilder builder)
         {
-            builder
-                .ConfigureServices((context, services) =>
-                {
-                    var region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "eu-north-1";
-                    var userPoolId = Environment.GetEnvironmentVariable("USER_POOL_ID");
-
-                    var cognitoAuthority = $"https://cognito-idp.{region}.amazonaws.com/{userPoolId}";
-
-                    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                        .AddJwtBearer(options =>
-                        {
-                            options.Authority = cognitoAuthority;
-                            options.TokenValidationParameters = new TokenValidationParameters
-                            {
-                                ValidateAudience = false
-                            };
-                        });
-
-                    services.AddAuthorization();
-
-                    services
-                        .AddGraphQLServer()
-                        .AddAuthorization()
-                        .AddQueryType<Query>()
-                        .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
-                })
-                .ConfigureLogging(logging => logging.AddConsole())
-                .Configure(app =>
-                {
-                    app.UseRouting();
-                    app.UseAuthentication();
-                    app.UseAuthorization();
-                    app.UseEndpoints(endpoints =>
-                    {
-                        endpoints.MapGraphQL();
-                    });
-                });
+            builder.UseStartup<EventSignup.Startup>();
         }
     }
 }
+

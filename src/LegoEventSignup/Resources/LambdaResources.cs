@@ -16,7 +16,7 @@ namespace LegoEventSignup.Resources
             GraphQLLambda = new Function(scope, "LegoEventSignupGraphQLLambda", new FunctionProps
             {
                 Runtime = Runtime.DOTNET_8,
-                Handler = "EventSignup::EventSignup.Lambda.Function::FunctionHandler",
+                Handler = "EventSignup::EventSignup.Function::FunctionHandlerAsync",
                 Code = Code.FromAsset("lambda/publish"),
                 Vpc = vpc,
                 VpcSubnets = new SubnetSelection
