@@ -13,35 +13,11 @@ namespace LegoEventSignup.Resources
 
         public LambdaResources(Construct scope, Vpc vpc, string dbSecretArn, string dbEndpoint, string dbName, string userPoolId)
         {
-            // var lambdaRole = new Role(scope, "GraphQLLambdaRole", new RoleProps
-            // {
-            //     AssumedBy = new ServicePrincipal("lambda.amazonaws.com"),
-            //     ManagedPolicies = new[]
-            //     {
-            //         ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSLambdaVPCAccessExecutionRole"),
-            //         ManagedPolicy.FromAwsManagedPolicyName("service-role/AWSLambdaBasicExecutionRole")
-            //     }
-            // });
-
-            // lambdaRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
-            // {
-            //     Effect = Effect.ALLOW,
-            //     Actions = new[] { "secretsmanager:GetSecretValue" },
-            //     Resources = new[] { dbSecretArn }
-            // }));
-
-            // lambdaRole.AddToPolicy(new PolicyStatement(new PolicyStatementProps
-            // {
-            //     Effect = Effect.ALLOW,
-            //     Actions = new[] { "cognito-idp:VerifyToken" },
-            //     Resources = new[] { $"arn:aws:cognito-idp:*:*:userpool/{userPoolId}" }
-            // }));
-
             GraphQLLambda = new Function(scope, "LegoEventSignupGraphQLLambda", new FunctionProps
             {
                 Runtime = Runtime.DOTNET_8,
-                Handler = "EventSignup.Lambda::EventSignup.Lambda.Function::FunctionHandler",
-                Code = Code.FromAsset("lambda"),
+                Handler = "EventSignup::EventSignup.Lambda.Function::FunctionHandler",
+                Code = Code.FromAsset("lambda/publish"),
                 Vpc = vpc,
                 VpcSubnets = new SubnetSelection
                 {

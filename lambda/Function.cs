@@ -1,51 +1,58 @@
 using Amazon.Lambda.Core;
-using HotChocolate;
-using HotChocolate.Execution;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Logging;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace EventSignup.Lambda
+namespace EventSignup.Lambda 
 {
-    public class Function
+    public class Function : Amazon.Lambda.AspNetCoreServer.APIGatewayProxyFunction
     {
-        private static readonly IRequestExecutor _executor;
-
-        static Function()
+        protected override void Init(IWebHostBuilder builder)
         {
-            var services = new ServiceCollection();
+            builder.ConfigureServices((services) =>
+                {
 
-            services
-                .AddGraphQL()
-                .AddQueryType<Query>();
+                var region = Environment.GetEnvironmentVariable("AWS_REGION") 
+                    ?? "eu-north-1";
+                var userPoolId = Environment.GetEnvironmentVariable("USER_POOL_ID");
+                
+                var cognitoAuthority = $"https://cognito-idp.{region}.amazonaws.com/{userPoolId}";
+                
+                services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = cognitoAuthority;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateAudience = false, // Or true, and set Audience
+                        };
+                    });
 
-            var serviceProvider = services.BuildServiceProvider();
-            _executor = serviceProvider
-                .GetRequiredService<IRequestExecutorResolver>()
-                .GetRequestExecutorAsync()
-                .GetAwaiter()
-                .GetResult();
+                services.AddAuthorization();
+
+                services
+                    .AddGraphQLServer()
+                    .AddAuthorization()
+                    .AddQueryType<Query>()
+                    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
+            })
+            .ConfigureLogging(logging => logging.AddConsole())
+            .Configure(app =>
+            {
+                app.UseRouting();
+                app.UseAuthentication();
+                app.UseAuthorization();
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapGraphQL(); 
+                });
+            });
         }
 
-        public async Task<object?> FunctionHandler(AppSyncRequest request, ILambdaContext context)
-        {
-            var query = BuildGraphQLQuery(request);
-
-            IExecutionResult result = await _executor.ExecuteAsync(query);
-
-            if (result is IQueryResult queryResult && queryResult.Errors?.Count > 0)
-                throw new Exception(string.Join("\n", queryResult.Errors.Select(e => e.Message)));
-
-            return ((IQueryResult)result).Data?.Values.FirstOrDefault();
-        }
-
-        private string BuildGraphQLQuery(AppSyncRequest request)
-        {
-            var args = request.Arguments.Any()
-                ? $"({string.Join(", ", request.Arguments.Select(arg => $"{arg.Key}: {arg.Value}"))})"
-                : "";
-
-            return $"query {{ {request.Info.FieldName}{args} {{ id name date }} }}";
-        }
     }
 }

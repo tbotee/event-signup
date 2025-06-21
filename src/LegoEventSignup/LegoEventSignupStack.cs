@@ -14,6 +14,7 @@ namespace LegoEventSignup
             var cognitoResources = new CognitoResources(this);
             var userPool = cognitoResources.UserPool;
             var userPoolClient = cognitoResources.UserPoolClient;
+            var authorizer = cognitoResources.Authorizer;
 
             var dbResources = new DatabaseResources(this, vpc);
             var db = dbResources.DatabaseInstance;
@@ -31,11 +32,11 @@ namespace LegoEventSignup
 
             dbSecret.GrantRead(graphqlLambda);
 
-            var graphqlApiResources = new GraphQLApiResources(this, graphqlLambda, userPool);
+            var graphqlApiResources = new GraphQLApiResources(this, graphqlLambda, userPool, authorizer);
 
             new CfnOutput(this, "GraphQLAPIURL", new CfnOutputProps
             {
-                Value = graphqlApiResources.Api.GraphqlUrl,
+                Value = graphqlApiResources.Api.Url,
                 Description = "GraphQL API URL"
             });
 

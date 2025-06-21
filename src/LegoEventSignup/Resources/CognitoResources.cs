@@ -1,5 +1,6 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.Cognito;
+using Amazon.CDK.AwsApigatewayv2Authorizers;
 using Constructs;
 
 namespace LegoEventSignup.Resources
@@ -8,6 +9,8 @@ namespace LegoEventSignup.Resources
     {
         public UserPool UserPool { get; }
         public UserPoolClient UserPoolClient { get; }
+
+        public HttpUserPoolAuthorizer Authorizer { get; }
 
         public CognitoResources(Construct scope)
         {
@@ -42,6 +45,7 @@ namespace LegoEventSignup.Resources
                     AdminUserPassword = true
                 }
             });
+            Authorizer = new HttpUserPoolAuthorizer("CognitoAuthorizer", UserPool);
         }
     }
 }
