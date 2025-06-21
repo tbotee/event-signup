@@ -14,45 +14,43 @@ namespace EventSignup.Lambda
     {
         protected override void Init(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((services) =>
+            builder
+                .ConfigureServices((context, services) =>
                 {
+                    var region = Environment.GetEnvironmentVariable("AWS_REGION") ?? "eu-north-1";
+                    var userPoolId = Environment.GetEnvironmentVariable("USER_POOL_ID");
 
-                var region = Environment.GetEnvironmentVariable("AWS_REGION") 
-                    ?? "eu-north-1";
-                var userPoolId = Environment.GetEnvironmentVariable("USER_POOL_ID");
-                
-                var cognitoAuthority = $"https://cognito-idp.{region}.amazonaws.com/{userPoolId}";
-                
-                services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.Authority = cognitoAuthority;
-                        options.TokenValidationParameters = new TokenValidationParameters
+                    var cognitoAuthority = $"https://cognito-idp.{region}.amazonaws.com/{userPoolId}";
+
+                    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                        .AddJwtBearer(options =>
                         {
-                            ValidateAudience = false, // Or true, and set Audience
-                        };
-                    });
+                            options.Authority = cognitoAuthority;
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateAudience = false
+                            };
+                        });
 
-                services.AddAuthorization();
+                    services.AddAuthorization();
 
-                services
-                    .AddGraphQLServer()
-                    .AddAuthorization()
-                    .AddQueryType<Query>()
-                    .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
-            })
-            .ConfigureLogging(logging => logging.AddConsole())
-            .Configure(app =>
-            {
-                app.UseRouting();
-                app.UseAuthentication();
-                app.UseAuthorization();
-                app.UseEndpoints(endpoints =>
+                    services
+                        .AddGraphQLServer()
+                        .AddAuthorization()
+                        .AddQueryType<Query>()
+                        .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
+                })
+                .ConfigureLogging(logging => logging.AddConsole())
+                .Configure(app =>
                 {
-                    endpoints.MapGraphQL(); 
+                    app.UseRouting();
+                    app.UseAuthentication();
+                    app.UseAuthorization();
+                    app.UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapGraphQL();
+                    });
                 });
-            });
         }
-
     }
 }
