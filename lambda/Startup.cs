@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using EventSignup.Services;
+using Microsoft.EntityFrameworkCore;
+using EventSignup.Data;
 
 namespace EventSignup
 {
@@ -26,10 +29,26 @@ namespace EventSignup
 
             services.AddAuthorization();
 
+
+            services.AddSingleton<IDatabaseConnectionService, DatabaseConnectionService>();
+
+            services.AddDbContext<EventSignupContext>((serviceProvider, options) =>
+            {
+                var connectionService = serviceProvider.GetRequiredService<IDatabaseConnectionService>();
+                var connectionString = connectionService.GetConnectionString();
+                options.UseNpgsql(connectionString);
+            });
+
+            services.AddScoped<IDatabaseService, DatabaseService>();
+            
+            services.AddScoped<EventSignup.Query>();
+            services.AddScoped<EventSignup.Mutation>();
+
             services
                 .AddGraphQLServer()
                 .AddAuthorization()
-                .AddQueryType<Query>()
+                .AddQueryType<EventSignup.Query>()
+                .AddMutationType<EventSignup.Mutation>()
                 .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
         }
 

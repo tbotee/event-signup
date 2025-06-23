@@ -21,12 +21,27 @@ namespace LegoEventSignup.Resources
                 Username = "postgres"
             });
 
+            // Create a security group for the database
+            var dbSecurityGroup = new SecurityGroup(scope, "DatabaseSecurityGroup", new SecurityGroupProps
+            {
+                Vpc = vpc,
+                Description = "Security group for Lego Event Signup PostgreSQL database",
+                AllowAllOutbound = true
+            });
+
+            // Allow PostgreSQL connections from anywhere
+            dbSecurityGroup.AddIngressRule(
+                Peer.AnyIpv4(),
+                Port.Tcp(5432),
+                "Allow PostgreSQL connections from anywhere"
+            );
+
             DatabaseInstance = new DatabaseInstance(scope, "LegoEventSignupPostgresDatabase", new DatabaseInstanceProps
             {
                 Engine = DatabaseInstanceEngine.Postgres(new PostgresInstanceEngineProps { Version = PostgresEngineVersion.VER_15_13 }),
                 InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.MICRO),
                 Vpc = vpc,
-                VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PRIVATE_WITH_EGRESS },
+                VpcSubnets = new SubnetSelection { SubnetType = SubnetType.PUBLIC },
                 Credentials = Credentials.FromSecret(DatabaseSecret),
                 MultiAz = false,
                 AllocatedStorage = 20,
@@ -34,7 +49,8 @@ namespace LegoEventSignup.Resources
                 BackupRetention = Duration.Seconds(0),
                 DeletionProtection = false,
                 RemovalPolicy = RemovalPolicy.DESTROY,
-                PubliclyAccessible = false,
+                PubliclyAccessible = true,
+                SecurityGroups = new[] { dbSecurityGroup },
                 DatabaseName = DB_NAME
             });
         }

@@ -1,22 +1,36 @@
-using EventSignup.Lambda.Models;
+using EventSignup.Data;
+using EventSignup.Models;
+using EventSignup.Services;
 using HotChocolate.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
-public class Query
+namespace EventSignup
 {
-    public IEnumerable<Event> ListEvents() => new[]
+    public class Query(ILogger<Query> logger)
     {
-        new Event { Id = "1", Name = "Lego Robotics", Date = "2025-07-01", MaxAttendees = 10 },
-        new Event { Id = "2", Name = "Lego Architecture", Date = "2025-07-15", MaxAttendees = 10 }
-    };
+        public async Task<IEnumerable<Event>> ListEvents([Service] IDatabaseService databaseService)
+        {
+            try
+            {
+                logger.LogInformation("Getting all events from database");
+                
+                return await databaseService.GetEventsAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to list events");
+                return new List<Event>
+                {
+                    new Event { Id = 1, Name = $"Error: {ex.Message}", Date = DateTime.Now, MaxAttendees = 100 }
+                };
+            }
+        }
 
-    [Authorize]
-    public IEnumerable<Event> ListParticipants() => new[]
-    {
-        new Event { Id = "1", Name = "Lego Robotics", Date = "2025-07-01", MaxAttendees = 10 },
-        new Event { Id = "2", Name = "Lego Architecture", Date = "2025-07-15", MaxAttendees = 10 }
-    };
-
-    [Authorize]
-    public Event? GetEventById(string id) =>
-        ListEvents().FirstOrDefault(e => e.Id == id);
+        // [Authorize]
+        // public async Task<IEnumerable<Participant>> ListParticipants(int eventId)
+        // {
+        //     return await databaseService.GetEventParticipantsAsync(eventId);
+        // }
+    }
 }

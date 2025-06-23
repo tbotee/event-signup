@@ -1,10 +1,12 @@
-namespace EventSignup.Lambda.Models
+namespace EventSignup.Models
 {
     public class Event
     {
-        public required string Id { get; set; }
-        public required string Name { get; set; }
-        public required string Date { get; set; }
-        public required int MaxAttendees { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public int MaxAttendees { get; set; } = 0;
+
+        public List<Participant> Participants { get; set; } = new();
     }
 }
