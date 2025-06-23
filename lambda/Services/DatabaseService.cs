@@ -89,26 +89,20 @@ namespace EventSignup.Services
             }
         }
 
-        public async Task<bool> DeleteParticipantAsync(int eventId, string email)
+        public async Task<bool> DeleteAllParticipantsByEmailAsync(string email)
         {
-            try
-            {
-                var participant = await _context.Participants
-                    .FirstOrDefaultAsync(p => p.EventId == eventId && p.Email == email);
+            var participants = await _context.Participants
+                .Where(p => p.Email == email)
+                .ToListAsync();
 
-                if (participant == null)
-                    return false;
+            if (participants.Count == 0)
+                return false;
 
-                _context.Participants.Remove(participant);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to delete participant for event {EventId} with email {Email}", eventId, email);
-                throw;
-            }
+            _context.Participants.RemoveRange(participants);
+            await _context.SaveChangesAsync();
+            return true;
         }
+
 
         public async Task<int> GetEventParticipantCountAsync(int eventId)
         {
@@ -124,19 +118,54 @@ namespace EventSignup.Services
             }
         }
 
-        public async Task<Participant> UpdateParticipantAsync(Participant participant)
+        public async Task<Event> CreateEventAsync(Event eventItem)
         {
             try
             {
-                _context.Participants.Update(participant);
+                _context.Events.Add(eventItem);
                 await _context.SaveChangesAsync();
-                return participant;
+                return eventItem;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to update participant with id {ParticipantId}", participant.Id);
+                _logger.LogError(ex, "Failed to create event");
                 throw;
             }
         }
+
+        public async Task<Event> UpdateEventAsync(Event eventItem)
+        {
+            try
+            {
+                _context.Events.Update(eventItem);
+                await _context.SaveChangesAsync();
+                return eventItem;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update event");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteEventAsync(int eventId)
+        {
+            try
+            {
+                var eventItem = await _context.Events.FindAsync(eventId);
+                if (eventItem == null)
+                    return false;
+
+                _context.Events.Remove(eventItem);      
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete event"); 
+                throw;
+            }
+        }
+
     }
 } 

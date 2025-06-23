@@ -47,13 +47,8 @@ namespace EventSignup.Services
                 {
                     throw new InvalidOperationException("Invalid secret format. Expected JSON with 'username' and 'password' fields");
                 }
-
-                _logger.LogInformation("Secret dbname: {Secret}", secret.Dbname);
                 
                 _connectionString = $"Host={dbEndpoint};Port={secret.Port};Database={secret.Dbname};Username={secret.Username};Password={secret.Password};";
-                        
-                _logger.LogInformation("Connection string: {ConnectionString}", _connectionString);
-                _logger.LogInformation("Database connection string created successfully for endpoint: {Endpoint}", dbEndpoint);
                 
                 return _connectionString;
             }

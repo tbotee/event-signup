@@ -4,36 +4,6 @@ cd lambda
 dotnet build
 dotnet publish -c Release -o publish
 
- 
-### List All Events
-```graphql
-query {
-  listEvents {
-    id
-    name
-    date
-    maxAttendees
-  }
-}
-```
-
-### Sign Up for Event
-```graphql
-mutation {
-  signupForEvent(input: {
-    eventId: 1
-    name: "John Doe"
-    email: "john@example.com"
-  }) {
-    success
-    message
-    participant {
-      id
-      name
-      email
-    }
-  }
-}
 ```
 
 ### Get Event Participants

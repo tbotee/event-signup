@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EventSignup.Services;
 using Microsoft.EntityFrameworkCore;
 using EventSignup.Data;
+using EventSignup.GqlTypes;
 
 namespace EventSignup
 {
@@ -41,14 +42,16 @@ namespace EventSignup
 
             services.AddScoped<IDatabaseService, DatabaseService>();
             
-            services.AddScoped<EventSignup.Query>();
-            services.AddScoped<EventSignup.Mutation>();
+            //services.AddScoped<EventSignup.Query>();
+            //services.AddScoped<ParticipantTypeMutation>();
 
             services
                 .AddGraphQLServer()
                 .AddAuthorization()
-                .AddQueryType<EventSignup.Query>()
-                .AddMutationType<EventSignup.Mutation>()
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>()
+                .AddType<ParticipantTypeMutation>()
+                .AddType<ParticipantTypeQuery>()
                 .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
         }
 
