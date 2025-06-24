@@ -14,11 +14,11 @@ It uses the [.NET CLI](https://docs.microsoft.com/dotnet/articles/core/) to comp
 * `cdk synth`        emits the synthesized CloudFormation template
 
 
-# Build the lambda function
+# Build and deploy the lambda function
 
-`cd lambda`
-`dotnet build`
-`dotnet publish -c Release -o ./publish --self-contained false`
+* `cd lambda`
+* `dotnet build`
+* `dotnet publish -c Release -o ./publish --self-contained false`
 
 # Test lambda 
 `dotnet test --verbosity normal`
