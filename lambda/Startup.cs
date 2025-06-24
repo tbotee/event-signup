@@ -7,6 +7,7 @@ using EventSignup.Services;
 using Microsoft.EntityFrameworkCore;
 using EventSignup.Data;
 using EventSignup.GqlTypes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EventSignup
 {
@@ -41,9 +42,6 @@ namespace EventSignup
             });
 
             services.AddScoped<IDatabaseService, DatabaseService>();
-            
-            //services.AddScoped<EventSignup.Query>();
-            //services.AddScoped<ParticipantTypeMutation>();
 
             services
                 .AddGraphQLServer()
@@ -52,11 +50,20 @@ namespace EventSignup
                 .AddMutationType<Mutation>()
                 .AddType<ParticipantTypeMutation>()
                 .AddType<ParticipantTypeQuery>()
+                .AddType<EventTypeQuery>()
+                .AddType<EventTypeMutation>()
                 .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<EventSignupContext>();
+                dbContext.Database.Migrate();
+            }
+
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
