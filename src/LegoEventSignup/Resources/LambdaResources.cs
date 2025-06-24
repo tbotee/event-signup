@@ -23,7 +23,6 @@ namespace LegoEventSignup.Resources
                 {
                     SubnetType = SubnetType.PRIVATE_WITH_EGRESS
                 },
-                // Role = lambdaRole,
                 Timeout = Duration.Seconds(30),
                 MemorySize = 512,
                 Environment = new Dictionary<string, string>

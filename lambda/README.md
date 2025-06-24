@@ -1,7 +1,9 @@
 # Build the lambda function
 
-cd lambda
-dotnet build
-dotnet publish -c Release -o ./publish --self-contained false
+```cd lambda```
+```dotnet build```
+```dotnet publish -c Release -o ./publish --self-contained false```
 
-cdk publish
+# Test lambda 
+```dotnet test --verbosity normal```
+

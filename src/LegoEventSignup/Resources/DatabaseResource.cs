@@ -21,7 +21,6 @@ namespace LegoEventSignup.Resources
                 Username = "postgres"
             });
 
-            // Create a security group for the database
             var dbSecurityGroup = new SecurityGroup(scope, "DatabaseSecurityGroup", new SecurityGroupProps
             {
                 Vpc = vpc,
@@ -29,7 +28,6 @@ namespace LegoEventSignup.Resources
                 AllowAllOutbound = true
             });
 
-            // Allow PostgreSQL connections from anywhere
             dbSecurityGroup.AddIngressRule(
                 Peer.AnyIpv4(),
                 Port.Tcp(5432),
