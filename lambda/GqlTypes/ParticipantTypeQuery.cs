@@ -18,4 +18,16 @@ public class ParticipantTypeQuery
         }
         return await databaseService.GetEventParticipantsAsync(eventId);
     }
+
+    [Authorize]
+    public async Task<IEnumerable<Participant>> ListParticipantsAuthorized(int eventId, [Service] IDatabaseService databaseService)
+    {
+        var eventItem = await databaseService.GetEventByIdAsync(eventId);
+
+        if (eventItem == null)
+        {
+            throw new GraphQLException("Event not found");
+        }
+        return await databaseService.GetEventParticipantsAsync(eventId);
+    }
 }
