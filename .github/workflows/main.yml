@@ -28,6 +28,19 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION || 'eu-north-1' }}
 
+    - name: Install EF Core tools
+      run: dotnet tool install --global dotnet-ef
+  
+    - name: Restore dependencies
+      working-directory: ./lambda
+      run: dotnet restore
+
+    - name: Apply EF Core migrations
+      working-directory: ./lambda
+      env:
+        ConnectionStrings__DefaultConnection: ${{ secrets.DB_CONNECTION_STRING }}
+      run: dotnet ef database update --no-build
+
     - name: Publish .NET Lambda
       working-directory: ./lambda
       run: dotnet publish -c Release -o ./publish --self-contained false

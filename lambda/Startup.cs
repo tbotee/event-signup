@@ -57,13 +57,6 @@ namespace EventSignup
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<EventSignupContext>();
-                dbContext.Database.Migrate();
-            }
-
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
