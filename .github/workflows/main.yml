@@ -39,7 +39,7 @@ jobs:
       working-directory: ./lambda
       env:
         ConnectionStrings__DefaultConnection: ${{ secrets.DB_CONNECTION_STRING }}
-      run: dotnet ef database update --no-build
+      run: dotnet ef database update
 
     - name: Publish .NET Lambda
       working-directory: ./lambda
