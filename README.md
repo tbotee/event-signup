@@ -1,11 +1,3 @@
-# Welcome to your CDK C# project!
-
-This is a blank project for CDK development with C#.
-
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
-
-It uses the [.NET CLI](https://docs.microsoft.com/dotnet/articles/core/) to compile and execute your project.
-
 ## Useful commands
 
 * `dotnet build src` compile this app
@@ -30,3 +22,138 @@ It uses the [.NET CLI](https://docs.microsoft.com/dotnet/articles/core/) to comp
 
 ### Sources
 * ChilliCream YouTube
+
+
+## Build Instructions
+
+```bash
+cd lambda
+dotnet build
+dotnet publish -c Release -o ./publish --self-contained false
+```
+
+## Testing
+
+```bash
+dotnet test --verbosity normal
+```
+
+### Available Queries
+
+#### List Events
+```graphql
+query {
+  listEvents {
+    id
+    name
+    date
+    maxAttendees
+  }
+}
+```
+
+#### List Participants (Public)
+```graphql
+query {
+  listParticipants(eventId: 1) {
+    id
+    name
+    email
+    eventId
+  }
+}
+```
+
+#### List Participants (Authorized)
+```graphql
+query {
+  listParticipantsAuthorized(eventId: 1) {
+    id
+    name
+    email
+    eventId
+  }
+}
+```
+
+#### Create Event
+```graphql
+mutation {
+  createEvent(input: {
+    name: "Lego Life Event"
+    date: "2024-01-15T10:00:00Z"
+    maxAttendees: 200
+  }) {
+    success
+    message
+    event {
+      id
+      name
+      date
+      maxAttendees
+    }
+  }
+}
+```
+
+#### Update Event
+```graphql
+mutation {
+  updateEvent(id: 1, input: {
+    name: "Updated Lego Event Updated"
+    date: "2024-01-20T10:00:00Z"
+    maxAttendees: 250
+  }) {
+    success
+    message
+    event {
+      id
+      name
+      date
+      maxAttendees
+    }
+  }
+}
+```
+
+#### Delete Event
+```graphql
+mutation {
+  deleteEvent(id: 1) {
+    success
+    message
+  }
+}
+```
+
+#### Signup for Event
+```graphql
+mutation {
+  signupForEvent(input: {
+    eventId: 1
+    name: "Botond T"
+    email: "bt@example.com"
+  }) {
+    success
+    message
+    participant {
+      id
+      name
+      email
+      eventId
+    }
+  }
+}
+```
+
+#### Delete All Participants by Email
+```graphql
+mutation {
+  deleteAllParticipantsByEmail(input: {
+    email: "bt@example.com"
+  }) {
+    success
+    message
+  }
+}
+```

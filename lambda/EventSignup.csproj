@@ -16,10 +16,10 @@
     <PackageReference Include="Amazon.Lambda.APIGatewayEvents" Version="2.7.1" />
     <PackageReference Include="Amazon.Lambda.RuntimeSupport" Version="1.13.1" />
 
-    <PackageReference Include="HotChocolate" Version="13.3.1" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="13.3.1" />
-    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.3.1" />
-    <PackageReference Include="HotChocolate.Execution" Version="13.3.1" />
+    <PackageReference Include="HotChocolate" Version="15.1.6" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.6" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="15.1.6" />
+    <PackageReference Include="HotChocolate.Execution" Version="15.1.6" />
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
