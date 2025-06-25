@@ -20,5 +20,13 @@ It uses the [.NET CLI](https://docs.microsoft.com/dotnet/articles/core/) to comp
 * `dotnet build`
 * `dotnet publish -c Release -o ./publish --self-contained false`
 
-# Test lambda 
-`dotnet test --verbosity normal`
+# Test lambda
+* `cd lambda`
+* `dotnet test --verbosity normal`
+
+
+### Enhancements
+* Outsource test in new project
+
+### Sources
+* ChilliCream YouTube
