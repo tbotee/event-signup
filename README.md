@@ -1,3 +1,7 @@
+## GraphQl Endpoint
+https://svxn3yuy30.execute-api.eu-north-1.amazonaws.com/graphql
+
+
 ## Useful commands
 
 * `dotnet build src` compile this app
