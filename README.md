@@ -10,7 +10,7 @@ https://svxn3yuy30.execute-api.eu-north-1.amazonaws.com/graphql
 * `cdk synth`        emits the synthesized CloudFormation template
 
 
-# Build and deploy the lambda function
+# Build the lambda function
 
 * `cd lambda`
 * `dotnet build`
@@ -26,15 +26,6 @@ https://svxn3yuy30.execute-api.eu-north-1.amazonaws.com/graphql
 
 ### Sources
 * ChilliCream YouTube
-
-
-## Build Instructions
-
-```bash
-cd lambda
-dotnet build
-dotnet publish -c Release -o ./publish --self-contained false
-```
 
 ## Testing
 
