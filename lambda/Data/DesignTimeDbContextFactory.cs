@@ -16,7 +16,7 @@ namespace EventSignup.Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<EventSignupContext>();
-            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseNpgsql(config.GetConnectionString("DefaultConnection"));
 
             return new EventSignupContext(optionsBuilder.Options);
         }
