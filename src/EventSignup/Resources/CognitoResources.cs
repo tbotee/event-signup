@@ -3,7 +3,7 @@ using Amazon.CDK.AWS.Cognito;
 using Amazon.CDK.AwsApigatewayv2Authorizers;
 using Constructs;
 
-namespace LegoEventSignup.Resources
+namespace EventSignup.Resources
 {
     public class CognitoResources
     {
@@ -14,9 +14,9 @@ namespace LegoEventSignup.Resources
 
         public CognitoResources(Construct scope)
         {
-            UserPool = new UserPool(scope, "LegoUserPool", new UserPoolProps
+            UserPool = new UserPool(scope, "UserPool", new UserPoolProps
             {
-                UserPoolName = "LegoEventUserPool",
+                UserPoolName = "EventUserPool",
                 SelfSignUpEnabled = false,
                 SignInAliases = new SignInAliases { Username = true, Email = true },
                 AutoVerify = new AutoVerifiedAttrs { Email = true },
@@ -35,7 +35,7 @@ namespace LegoEventSignup.Resources
                 AccountRecovery = AccountRecovery.EMAIL_ONLY
             });
 
-            UserPoolClient = new UserPoolClient(scope, "LegoUserPoolClient", new UserPoolClientProps
+            UserPoolClient = new UserPoolClient(scope, "UserPoolClient", new UserPoolClientProps
             {
                 UserPool = UserPool,
                 GenerateSecret = false,

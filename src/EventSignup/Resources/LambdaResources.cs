@@ -5,7 +5,7 @@ using Amazon.CDK.AWS.IAM;
 using Constructs;
 using System.Collections.Generic;
 
-namespace LegoEventSignup.Resources
+namespace EventSignup.Resources
 {
     public class LambdaResources
     {
@@ -13,7 +13,7 @@ namespace LegoEventSignup.Resources
 
         public LambdaResources(Construct scope, Vpc vpc, string dbSecretArn, string dbEndpoint, string dbName, string userPoolId)
         {
-            GraphQLLambda = new Function(scope, "LegoEventSignupGraphQLLambda", new FunctionProps
+            GraphQLLambda = new Function(scope, "EventSignupGraphQLLambda", new FunctionProps
             {
                 Runtime = Runtime.DOTNET_8,
                 Handler = "EventSignup::EventSignup.Function::FunctionHandlerAsync",

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LegoEventSignup
+namespace EventSignup
 {
     sealed class Program
     {
@@ -30,7 +30,7 @@ namespace LegoEventSignup
             try
             {
                 _logger.LogInformation("Starting CDK synth...");
-                new LegoEventSignupStack(app, "LegoEventSignupStack", new StackProps
+                new EventSignupStack(app, "EventSignupStack", new StackProps
                 {
                     Env = new Amazon.CDK.Environment
                     {

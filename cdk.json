@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run --project src/LegoEventSignup/LegoEventSignup.csproj",
+  "app": "dotnet run --project src/EventSignup/EventSignup.csproj",
   "watch": {
     "include": [
       "**"

@@ -38,7 +38,7 @@ namespace EventSignup.Tests
         {
             var dummyEvents = new List<Event>
             {
-                new Event { Id = 1, Name = "Lego life event", Date = DateTime.Now.AddDays(7), MaxAttendees = 200 },
+                new Event { Id = 1, Name = "life event", Date = DateTime.Now.AddDays(7), MaxAttendees = 200 },
             };
 
             _dbContext.Events.AddRange(dummyEvents);
@@ -58,7 +58,7 @@ namespace EventSignup.Tests
 
             var eventList = events.ToList();
             
-            Assert.Contains(eventList, e => e.Name == "Lego life event");
+            Assert.Contains(eventList, e => e.Name == "life event");
         }
 
         [Fact]
@@ -68,11 +68,11 @@ namespace EventSignup.Tests
 
             var eventToUpdate = await databaseService.GetEventByIdAsync(1);
 
-            eventToUpdate!.Name = "Lego live event updated";
+            eventToUpdate!.Name = "live event updated";
 
             var updatedEvent = await databaseService.UpdateEventAsync(eventToUpdate);
 
-            Assert.Equal("Lego live event updated", updatedEvent.Name);
+            Assert.Equal("live event updated", updatedEvent.Name);
         }
 
         public async ValueTask DisposeAsync()

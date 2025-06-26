@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegoEventSignup", "LegoEventSignup\LegoEventSignup.csproj", "{99FC4200-4AE4-4206-8FCF-062C1713868D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSignup", "EventSignup\EventSignup.csproj", "{99FC4200-4AE4-4206-8FCF-062C1713868D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

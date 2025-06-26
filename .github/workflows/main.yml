@@ -1,4 +1,4 @@
-name: Deploy Lego Event Signup
+name: Deploy Event Signup
 
 on:
   push:

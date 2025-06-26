@@ -4,7 +4,7 @@ using Amazon.CDK.AWS.RDS;
 using Amazon.CDK.AWS.SecretsManager;
 using Constructs;
 
-namespace LegoEventSignup.Resources
+namespace EventSignup.Resources
 {
     public class DatabaseResources
     {
@@ -12,11 +12,11 @@ namespace LegoEventSignup.Resources
 
         public DatabaseSecret DatabaseSecret { get; }
 
-        public const string DB_NAME = "legoeventdb";
+        public const string DB_NAME = "eventdb";
 
         public DatabaseResources(Construct scope, Vpc vpc)
         {
-            DatabaseSecret = new DatabaseSecret(scope, "LegoEventSignupPostgresSecret", new DatabaseSecretProps
+            DatabaseSecret = new DatabaseSecret(scope, "EventSignupPostgresSecret", new DatabaseSecretProps
             {
                 Username = "postgres"
             });
@@ -24,7 +24,7 @@ namespace LegoEventSignup.Resources
             var dbSecurityGroup = new SecurityGroup(scope, "DatabaseSecurityGroup", new SecurityGroupProps
             {
                 Vpc = vpc,
-                Description = "Security group for Lego Event Signup PostgreSQL database",
+                Description = "Security group for Event Signup PostgreSQL database",
                 AllowAllOutbound = true
             });
 
@@ -34,7 +34,7 @@ namespace LegoEventSignup.Resources
                 "Allow PostgreSQL connections from anywhere"
             );
 
-            DatabaseInstance = new DatabaseInstance(scope, "LegoEventSignupPostgresDatabase", new DatabaseInstanceProps
+            DatabaseInstance = new DatabaseInstance(scope, "EventSignupPostgresDatabase", new DatabaseInstanceProps
             {
                 Engine = DatabaseInstanceEngine.Postgres(new PostgresInstanceEngineProps { Version = PostgresEngineVersion.VER_15_13 }),
                 InstanceType = Amazon.CDK.AWS.EC2.InstanceType.Of(InstanceClass.BURSTABLE3, InstanceSize.MICRO),

@@ -23,6 +23,7 @@ https://svxn3yuy30.execute-api.eu-north-1.amazonaws.com/graphql
 
 ### Enhancements
 * Outsource test in new project
+* mapperly
 
 ### Sources
 * ChilliCream YouTube
@@ -75,7 +76,7 @@ query {
 ```graphql
 mutation {
   createEvent(input: {
-    name: "Lego Life Event"
+    name: "Life Event"
     date: "2024-01-15T10:00:00Z"
     maxAttendees: 200
   }) {
@@ -95,7 +96,7 @@ mutation {
 ```graphql
 mutation {
   updateEvent(id: 1, input: {
-    name: "Updated Lego Event Updated"
+    name: "Updated Event Updated"
     date: "2024-01-20T10:00:00Z"
     maxAttendees: 250
   }) {

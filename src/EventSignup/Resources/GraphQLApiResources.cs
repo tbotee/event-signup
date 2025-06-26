@@ -7,7 +7,7 @@ using Amazon.CDK.AwsApigatewayv2Authorizers;
 using Amazon.CDK.AwsApigatewayv2Integrations;
 using Amazon.CDK.AWS.Apigatewayv2;
 
-namespace LegoEventSignup.Resources
+namespace EventSignup.Resources
 {
     public class GraphQLApiResources
     {
@@ -16,7 +16,7 @@ namespace LegoEventSignup.Resources
 
         public GraphQLApiResources(Construct scope, Function lambda, UserPool userPool, HttpUserPoolAuthorizer authorizer)
         {
-            Api = new HttpApi(scope, "LegoGraphQLApi");
+            Api = new HttpApi(scope, "GraphQLApi");
 
             Api.AddRoutes(new AddRoutesOptions
             {
