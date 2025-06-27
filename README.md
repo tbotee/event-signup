@@ -1,17 +1,13 @@
 ## GraphQl Endpoint
 https://xgfhyj52wa.execute-api.eu-north-1.amazonaws.com/graphql
 
-
 ## Useful commands
-
 * `dotnet build src` compile this app
 * `cdk deploy`       deploy this stack to your default AWS account/region
 * `cdk diff`         compare deployed stack with current state
 * `cdk synth`        emits the synthesized CloudFormation template
 
-
 # Build the lambda function
-
 * `cd lambda`
 * `dotnet build`
 * `dotnet publish -c Release -o ./publish --self-contained false`
@@ -20,17 +16,14 @@ https://xgfhyj52wa.execute-api.eu-north-1.amazonaws.com/graphql
 * `cd lambda`
 * `dotnet test --verbosity normal`
 
-
 ### Enhancements
 * Outsource test in new project
-* mapperly
 
 ### Sources
 * ChilliCream YouTube https://www.youtube.com/@chillicreamtv
 * ChilliCream gitgub https://github.com/ChilliCream/graphql-workshop
 
 ## Testing
-
 ```bash
 dotnet test --verbosity normal
 ```
