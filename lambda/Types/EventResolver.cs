@@ -25,7 +25,7 @@ public static partial class EventResolver
 		PagingArguments pagingArguments,
 		QueryContext<Event> queryContext,
 		CancellationToken cancellationToken,
-		EventService eventService)
+		IEventService eventService)
 		=> await eventService
 			.GetEventsAsync(pagingArguments, queryContext, cancellationToken)
 			.ToConnectionAsync();
