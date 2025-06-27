@@ -10,5 +10,7 @@ namespace EventSignup.Services
 		Task<int> CreateParticipantAsync(CreateParticipantInput input, CancellationToken cancellationToken);
 
         Task<int> DeleteParticipantAsync(int eventId, CancellationToken cancellationToken);
+
+        Task<Participant?> GetParticipantByEventIdandEmail(int eventId, string email, CancellationToken cancellationToken);
     }
 }

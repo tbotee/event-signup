@@ -60,13 +60,13 @@ namespace EventSignup
                     PayloadErrorsFieldName = "errors",
                     ApplyToAllMutations = true
                 })
-                .AddTypeExtension<global::EventSignup.Types.EventMutations>()
-                .AddTypeExtension<global::EventSignup.Types.ParticipantMutations>()
-                .AddTypeExtension(typeof(global::EventSignup.Types.EventResolver))
-                .AddTypeExtension(typeof(global::EventSignup.Types.ParticipantResolver))
-                .AddDataLoader<global::EventSignup.Services.IEventByIdDataLoader, global::EventSignup.Services.EventByIdDataLoader>()
-                .AddDataLoader<global::EventSignup.Services.IParticipantByIdDataLoader, global::EventSignup.Services.ParticipantByIdDataLoader>()
-                .AddDataLoader<global::EventSignup.Services.IParticipantsByEventIdDataLoader, global::EventSignup.Services.ParticipantsByEventIdDataLoader>()
+                .AddTypeExtension<EventMutations>()
+                .AddTypeExtension<ParticipantMutations>()
+                .AddTypeExtension(typeof(EventResolver))
+                .AddTypeExtension(typeof(ParticipantResolver))
+                .AddDataLoader<IEventByIdDataLoader, EventByIdDataLoader>()
+                .AddDataLoader<IParticipantByIdDataLoader, ParticipantByIdDataLoader>()
+                .AddDataLoader<IParticipantsByEventIdDataLoader, ParticipantsByEventIdDataLoader>()
                 .AddMaxExecutionDepthRule(9)
                 .SetMaxAllowedValidationErrors(10)
                 .ModifyCostOptions(options =>

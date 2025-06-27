@@ -32,6 +32,18 @@ namespace EventSignup.Services
             return particvipantId;
         }
 
+        public async Task<Participant?> GetParticipantByEventIdandEmail(
+            int eventId,
+            string email,
+            CancellationToken cancellationToken)
+        {
+            return await _dbContext.Participants
+                .Map()
+                .FirstOrDefaultAsync(p =>
+                    p.EventId == eventId &&
+                    p.Email.ToLower() == email.ToLower(), cancellationToken);
+        }
+
         public async Task<Page<Participant>> GetParticipantsAsync(
 			PagingArguments pagingArguments,
 			QueryContext<Participant>? queryContext = default,
