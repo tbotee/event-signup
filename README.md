@@ -1,5 +1,5 @@
 ## GraphQl Endpoint
-https://svxn3yuy30.execute-api.eu-north-1.amazonaws.com/graphql
+https://xgfhyj52wa.execute-api.eu-north-1.amazonaws.com/graphql
 
 
 ## Useful commands
@@ -114,6 +114,7 @@ mutation{
   }
 }
 ```
+
 ```graphql
 mutation{
   createParticipant(input:  {
@@ -127,3 +128,19 @@ mutation{
     }
   }
 }
+```
+
+```graphql
+mutation{
+  deleteParticipant(input:  {
+     participantId: 4
+  }) {
+    int
+    errors {
+     ... on Error {
+      message
+     }
+    }
+  }
+}
+```
