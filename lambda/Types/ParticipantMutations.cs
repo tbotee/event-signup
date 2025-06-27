@@ -7,6 +7,7 @@ namespace EventSignup.Types
     [ExtendObjectType(typeof(Mutation))]
     public class ParticipantMutations
     {
+        [Error(typeof(NotFoundException))]
         public async Task<Participant> CreateParticipantAsync(
             [UseFluentValidation] CreateParticipantInput input,
             CancellationToken cancellationToken,
