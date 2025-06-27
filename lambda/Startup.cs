@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using EventSignup.Data;
 using AppAny.HotChocolate.FluentValidation;
 using EventSignup.Types;
+using FluentValidation;
 
 namespace EventSignup
 {
@@ -40,6 +41,9 @@ namespace EventSignup
 
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IParticipantService, ParticipantService>();
+            services.AddScoped<IValidator<CreateEventInput>, CreateEventInputValidator>();
+            services.AddScoped<IValidator<UpdateEventInput>, UpdateEventInputValidator>();
+            services.AddScoped<IValidator<CreateParticipantInput>, CreateParticipantValidator>();
 
             services.AddHttpResponseFormatter();
 
