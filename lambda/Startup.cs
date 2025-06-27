@@ -61,6 +61,7 @@ namespace EventSignup
                     ApplyToAllMutations = true
                 })
                 .AddTypeExtension<global::EventSignup.Types.EventMutations>()
+                .AddTypeExtension<global::EventSignup.Types.ParticipantMutations>()
                 .AddTypeExtension(typeof(global::EventSignup.Types.EventResolver))
                 .AddTypeExtension(typeof(global::EventSignup.Types.ParticipantResolver))
                 .AddDataLoader<global::EventSignup.Services.IEventByIdDataLoader, global::EventSignup.Services.EventByIdDataLoader>()
