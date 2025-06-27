@@ -44,7 +44,7 @@ namespace EventSignup
             services.AddHttpResponseFormatter();
 
             services
-                .AddGraphQL()
+                .AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
                 .AddMutationConventions(new MutationConventionOptions
