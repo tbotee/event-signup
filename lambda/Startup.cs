@@ -86,7 +86,8 @@ namespace EventSignup
                 })
                 .AddFiltering()
                 .AddSorting()
-                .AddFluentValidation();
+                .AddFluentValidation()
+                .AddDiagnosticEventListener<HotChocolate.AspNetCore.Instrumentation.ServerDiagnosticEventListener>();
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
