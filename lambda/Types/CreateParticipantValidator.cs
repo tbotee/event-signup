@@ -6,6 +6,8 @@ namespace EventSignup.Types
     {
         public CreateParticipantValidator()
         {
+            RuleFor(x => x.EventId)
+                .NotEmpty();
             RuleFor(x => x.Name)
                 .NotEmpty();
             RuleFor(x => x.Email)
