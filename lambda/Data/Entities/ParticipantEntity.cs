@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EventSignup.Models;
+namespace EventSignup.Data.Entities;
 
 [Table("participants", Schema = "public")]
-public class Participant
+public class ParticipantEntity
 {
     [Key]
     [Column("id")]
@@ -25,5 +25,5 @@ public class Participant
     public string Email { get; set; } = string.Empty;
 
     [ForeignKey("EventId")]
-    public Event Event { get; set; } = null!;
+    public EventEntity Event { get; set; } = null!;
 }

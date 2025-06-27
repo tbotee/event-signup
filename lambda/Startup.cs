@@ -1,13 +1,10 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EventSignup.Services;
 using Microsoft.EntityFrameworkCore;
 using EventSignup.Data;
-using EventSignup.GqlTypes;
-using Microsoft.Extensions.DependencyInjection;
+using AppAny.HotChocolate.FluentValidation;
+using EventSignup.Types;
 
 namespace EventSignup
 {
@@ -41,18 +38,57 @@ namespace EventSignup
                 options.UseNpgsql(connectionString);
             });
 
-            services.AddScoped<IDatabaseService, DatabaseService>();
+            //services.AddScoped<IDatabaseService, DatabaseService>();
+
+
+            services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IParticipantService, ParticipantService>();
 
             services
-                .AddGraphQLServer()
-                .AddAuthorization()
+                .AddGraphQL()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
-                .AddType<ParticipantTypeMutation>()
-                .AddType<ParticipantTypeQuery>()
-                .AddType<EventTypeQuery>()
-                .AddType<EventTypeMutation>()
-                .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = true);
+                .AddMutationConventions(new MutationConventionOptions
+                {
+                    InputArgumentName = "input",
+                    InputTypeNamePattern = "{MutationName}Input",
+                    PayloadTypeNamePattern = "{MutationName}Payload",
+                    PayloadErrorTypeNamePattern = "{MutationName}Error",
+                    PayloadErrorsFieldName = "errors",
+                    ApplyToAllMutations = true
+                })
+                .AddTypeExtension<global::EventSignup.Types.EventMutations>()
+                .AddTypeExtension(typeof(global::EventSignup.Types.EventResolver))
+                .AddTypeExtension(typeof(global::EventSignup.Types.ParticipantResolver))
+                .AddDataLoader<global::EventSignup.Services.IEventByIdDataLoader, global::EventSignup.Services.EventByIdDataLoader>()
+                .AddDataLoader<global::EventSignup.Services.IParticipantByIdDataLoader, global::EventSignup.Services.ParticipantByIdDataLoader>()
+                .AddDataLoader<global::EventSignup.Services.IParticipantsByEventIdDataLoader, global::EventSignup.Services.ParticipantsByEventIdDataLoader>()
+                .AddMaxExecutionDepthRule(9)
+                .SetMaxAllowedValidationErrors(10)
+                .ModifyCostOptions(options =>
+                {
+                    options.MaxFieldCost = 20_000;
+                    options.MaxTypeCost = 20_000;
+                    options.EnforceCostLimits = true;
+                    options.ApplyCostDefaults = true;
+                    options.DefaultResolverCost = 10.0;
+                })
+                .ModifyRequestOptions(
+                    options =>
+                    {
+                        options.IncludeExceptionDetails = true;
+                    })
+                .AddPagingArguments()
+                .ModifyPagingOptions(opt =>
+                {
+                    opt.MaxPageSize = 100;
+                    opt.DefaultPageSize = 25;
+                    opt.IncludeTotalCount = true;
+                })
+                .AddFiltering()
+                .AddSorting()
+                .AddFluentValidation();
+            ;
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)

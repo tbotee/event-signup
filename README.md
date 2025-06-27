@@ -26,7 +26,8 @@ https://svxn3yuy30.execute-api.eu-north-1.amazonaws.com/graphql
 * mapperly
 
 ### Sources
-* ChilliCream YouTube
+* ChilliCream YouTube https://www.youtube.com/@chillicreamtv
+* ChilliCream gitgub https://github.com/ChilliCream/graphql-workshop
 
 ## Testing
 
@@ -48,108 +49,81 @@ query {
 }
 ```
 
-#### List Participants (Public)
 ```graphql
 query {
-  listParticipants(eventId: 1) {
-    id
-    name
-    email
-    eventId
+  events() {
+    nodes {
+      id
+      date
+      participants(first: 5) {
+        nodes{
+          id
+          name
+          email
+        }
+      }
+    }
   }
 }
 ```
 
-#### List Participants (Authorized)
 ```graphql
-query {
-  listParticipantsAuthorized(eventId: 1) {
-    id
-    name
-    email
-    eventId
-  }
-}
-```
-
-#### Create Event
-```graphql
-mutation {
-  createEvent(input: {
-    name: "Life Event"
-    date: "2024-01-15T10:00:00Z"
-    maxAttendees: 200
+mutation{
+  createEvent(input:  {
+     name: "Event name I"
+     date: "2025-11-20T00:00:00.000Z"
+     maxAttendees: 0
   }) {
-    success
-    message
     event {
       id
-      name
-      date
       maxAttendees
     }
   }
 }
 ```
 
-#### Update Event
 ```graphql
 mutation {
-  updateEvent(id: 1, input: {
-    name: "Updated Event Updated"
-    date: "2024-01-20T10:00:00Z"
-    maxAttendees: 250
+  updateEvent(input: {
+     id: 4
+     maxAttendees: 11
   }) {
-    success
-    message
     event {
-      id
-      name
-      date
       maxAttendees
+    }
+    errors {
+     ... on Error {
+      message
+     }
     }
   }
 }
 ```
 
-#### Delete Event
 ```graphql
-mutation {
-  deleteEvent(id: 1) {
-    success
-    message
+mutation{
+  deleteEvent(input:  {
+     eventId: 4
+  }) {
+    int
+    errors {
+     ... on Error {
+      message
+     }
+    }
   }
 }
 ```
-
-#### Signup for Event
 ```graphql
-mutation {
-  signupForEvent(input: {
-    eventId: 1
-    name: "Botond T"
-    email: "bt@example.com"
+mutation{
+  createParticipant(input:  {
+     name: "participant 1"
+     email: "br@example.com"
   }) {
-    success
-    message
     participant {
       id
       name
       email
-      eventId
     }
   }
 }
-```
-
-#### Delete All Participants by Email
-```graphql
-mutation {
-  deleteAllParticipantsByEmail(input: {
-    email: "bt@example.com"
-  }) {
-    success
-    message
-  }
-}
-```

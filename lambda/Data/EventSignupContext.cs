@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using EventSignup.Models;
+using EventSignup.Data.Entities;
 
 namespace EventSignup.Data
 {
@@ -9,17 +9,17 @@ namespace EventSignup.Data
         {
         }
 
-        public DbSet<Event> Events => Set<Event>();
-        public DbSet<Participant> Participants => Set<Participant>();
+        public DbSet<EventEntity> Events => Set<EventEntity>();
+        public DbSet<ParticipantEntity> Participants => Set<ParticipantEntity>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
-            modelBuilder.Entity<Participant>()
+            modelBuilder.Entity<ParticipantEntity>()
                 .HasIndex(p => new { p.EventId, p.Email })
                 .IsUnique()
                 .HasDatabaseName("idx_participants_event_email_unique");
                 
-            modelBuilder.Entity<Participant>()
+            modelBuilder.Entity<ParticipantEntity>()
                 .HasOne(p => p.Event)
                 .WithMany(e => e.Participants)
                 .HasForeignKey(p => p.EventId)

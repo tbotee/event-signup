@@ -1,7 +1,9 @@
 using EventSignup.Data;
-using EventSignup.GqlTypes;
-using EventSignup.Models;
+using EventSignup.Data.Entities;
 using EventSignup.Services;
+using EventSignup.Types;
+using GreenDonut;
+using GreenDonut.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -13,7 +15,6 @@ namespace EventSignup.Tests
     {
         private readonly ServiceProvider _serviceProvider;
         private readonly EventSignupContext _dbContext;
-        private readonly EventTypeQuery _eventQuery;
 
         public SimpleGraphQLEndpointTests()
         {
@@ -25,20 +26,19 @@ namespace EventSignup.Tests
             services.AddLogging(builder => builder.AddConsole());
 
     
-            services.AddScoped<IDatabaseService, DatabaseService>();
+            services.AddScoped<IEventService, EventService>();
 
 
             _serviceProvider = services.BuildServiceProvider();
             _dbContext = _serviceProvider.GetRequiredService<EventSignupContext>();
-            _eventQuery = new EventTypeQuery();
             SeedDummyData().Wait();
         }
 
         private async Task SeedDummyData()
         {
-            var dummyEvents = new List<Event>
+            var dummyEvents = new List<EventEntity>
             {
-                new Event { Id = 1, Name = "life event", Date = DateTime.Now.AddDays(7), MaxAttendees = 200 },
+                new EventEntity { Id = 1, Name = "life event", Date = DateTime.Now.AddDays(7), MaxAttendees = 200 },
             };
 
             _dbContext.Events.AddRange(dummyEvents);
@@ -47,34 +47,24 @@ namespace EventSignup.Tests
 
         
         [Fact]
-        public async Task ListEvents_ShouldReturnAllEvents()
+        public async Task GetEventsAsync_ShouldReturnPagedResult()
         {
-            var databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
+            var eventService = _serviceProvider.GetRequiredService<IEventService>();
 
-            var events = await _eventQuery.ListEvents(databaseService);
+            var pagingArguments = new PagingArguments { First = 10 };
+            var queryContext = new QueryContext<Event>();
 
-            Assert.NotNull(events);
-            Assert.Single(events);
 
-            var eventList = events.ToList();
-            
-            Assert.Contains(eventList, e => e.Name == "life event");
+            var result = await eventService.GetEventsAsync(pagingArguments, queryContext);
+
+            Assert.NotNull(result);
+            Assert.Single(result.Items);
+            Assert.Equal(1, result.Items.First().Id);
+            Assert.Equal("life event", result.Items.First().Name);
+            Assert.Equal(200, result.Items.First().MaxAttendees);
         }
 
-        [Fact]
-        public async Task ListEvents_ShouldUpdateEvent()
-        {
-            var databaseService = _serviceProvider.GetRequiredService<IDatabaseService>();
-
-            var eventToUpdate = await databaseService.GetEventByIdAsync(1);
-
-            eventToUpdate!.Name = "live event updated";
-
-            var updatedEvent = await databaseService.UpdateEventAsync(eventToUpdate);
-
-            Assert.Equal("live event updated", updatedEvent.Name);
-        }
-
+        
         public async ValueTask DisposeAsync()
         {
             if (_dbContext != null)

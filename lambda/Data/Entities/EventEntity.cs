@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EventSignup.Models
+namespace EventSignup.Data.Entities
 {
     [Table("events", Schema = "public")]
-    public class Event
+    public class EventEntity
     {
         [Key]
         [Column("id")]
@@ -22,6 +22,6 @@ namespace EventSignup.Models
         [Column("max_attendees")]
         public int MaxAttendees { get; set; } = 0;
 
-        public List<Participant> Participants { get; set; } = new();
+        public List<ParticipantEntity> Participants { get; set; } = new();
     }
 }
