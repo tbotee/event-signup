@@ -31,7 +31,8 @@ namespace EventSignup.Types
                     return false;
                 }
                 return true;
-            });
+            })
+            .WithMessage("Participant with email '{Email}' is already registered for event ID '{EventId}'."); ;
         }
     }
 }
