@@ -3,6 +3,8 @@ using EventSignup.Services;
 
 namespace EventSignup.Types
 {
+
+    [ExtendObjectType(typeof(Mutation))]
     public class ParticipantMutations
     {
         public async Task<Participant> CreateParticipantAsync(
