@@ -37,21 +37,9 @@ dotnet test --verbosity normal
 
 ### Available Queries
 
-#### List Events
 ```graphql
 query {
-  listEvents {
-    id
-    name
-    date
-    maxAttendees
-  }
-}
-```
-
-```graphql
-query {
-  events() {
+  events {
     nodes {
       id
       date

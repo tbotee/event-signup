@@ -38,11 +38,10 @@ namespace EventSignup
                 options.UseNpgsql(connectionString);
             });
 
-            //services.AddScoped<IDatabaseService, DatabaseService>();
-
-
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IParticipantService, ParticipantService>();
+
+            services.AddHttpResponseFormatter();
 
             services
                 .AddGraphQL()
@@ -88,7 +87,6 @@ namespace EventSignup
                 .AddFiltering()
                 .AddSorting()
                 .AddFluentValidation();
-            ;
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
